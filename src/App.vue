@@ -1,28 +1,46 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    
+    <div class="d-flex">
+      <sidenav v-if="!this.hideOn.includes($route.name)" ></sidenav>
+      <div class=" w-100">
+        <navbar v-if='!this.hideOn.includes($route.name)' ></navbar>
+        <router-view/>
+      </div>
+    </div>
+
+    </div>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import navbar from './components/layout/navbar.vue';
+import sidenav from './components/layout/sidenav.vue';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  components:{
+    navbar,
+    sidenav
+  },
+  data(){
+
+    return {
+      hideOn:['home']
+    }
+
   }
 }
 </script>
+
 
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background:#fbfbfd ;
 }
+
+
 </style>
