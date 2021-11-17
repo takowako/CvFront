@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     
-    <div class="d-flex">
+    <div class="d-flex" >
       <sidenav v-if="!this.hideOn.includes($route.name)" ></sidenav>
       <div class=" w-100">
         <navbar v-if='!this.hideOn.includes($route.name)' ></navbar>
@@ -17,6 +17,8 @@
 import navbar from './components/layout/navbar.vue';
 import sidenav from './components/layout/sidenav.vue';
 
+import { mapActions } from 'vuex';
+
 export default {
   components:{
     navbar,
@@ -27,6 +29,14 @@ export default {
     return {
       hideOn:['home']
     }
+  },
+  methods:{
+    ...mapActions(['LoginByCookie'])
+  },
+  mounted(){
+
+    //Check Cookie
+    this.LoginByCookie();
 
   }
 }

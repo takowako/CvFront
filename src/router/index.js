@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueCookies from 'vue-cookies';
+import _ from 'lodash';
+import store from '../store/index'
 import Home from '../views/Home.vue'
 import profile from '../views/profile.vue'
+import login from '../views/login.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +18,18 @@ const routes = [
   {
     path:'/profile',
     name:'profile',
-    component:profile
+    component:profile,
+    meta:{
+      requireAuth:true
+    }
+  },
+  {
+    path:'/login',
+    name:'login',
+    component:login,
+    meta:{
+      requireGuest:true
+    }
   },
   {
     path: '/about',
@@ -29,5 +44,30 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+
+router.beforeEach((to, from, next)=>{
+
+  //Check User From Cookies
+  var UserCookie=VueCookies.get('user');
+  var TokenCookie=VueCookies.get('token');
+
+  if(to.meta.requireGuest && !_.isEmpty(UserCookie) && !_.isEmpty(TokenCookie)){
+    router.push({ name:'home' });
+  }
+  
+  //Check User From State
+  var User=store.getters.User;
+  var Token=store.getters.Token;
+  if(to.meta.requireGuest && !_.isEmpty(User) && !_.isEmpty(Token)){
+    router.push({ name:'home' });
+  }
+
+  if(to.meta.requireAuth && _.isEmpty(User) && _.isEmpty(Token)){
+    router.push({ name:'login' });
+  }
+  next()
+
+});
 
 export default router
