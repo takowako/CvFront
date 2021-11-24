@@ -1,6 +1,7 @@
 import axios from "axios"; 
 import VueCookie from 'vue-cookies';
-// import CryptoJS from 'crypto-js'
+import CryptoJS from 'crypto-js'
+import router from '../../router/index'
 
 
 
@@ -19,17 +20,37 @@ const actions = {
     //Login
     Login({commit},user){
 
+
         var url = process.env.VUE_APP_BASEURL+'/User/login';
         axios.post(url,user,{headers:{}}).then(function(resp){
 
-            var result = resp.data;
-
             if(resp.data.success){
-                console.log(result)
-                commit('User',result.data.user)
-                commit('Token',result.data.token)
-                VueCookie.set('user',result.data.user._id)
-                VueCookie.set('token',result.data.token)
+                
+                //encrypt token 
+                const key = process.env.VUE_APP_ENCKEY //
+                const iv = process.env.VUE_APP_ENCIV // 
+                const txt= resp.data.token;
+                
+                const cipher = CryptoJS.AES.encrypt(txt, CryptoJS.enc.Utf8.parse(key), {
+                    iv: CryptoJS.enc.Utf8.parse(iv),
+                    mode: CryptoJS.mode.CBC
+                })
+
+                commit('User',resp.data.user)
+                commit('Token',cipher.toString())
+
+                VueCookie.set('user',resp.data.data.user._id)
+                VueCookie.set('token',cipher.toString())
+
+                //Set Token Default
+                axios.defaults.headers.common['Authorization'] = txt;
+
+                //redirect to profile view 
+                router.push({name:'profile'})
+
+
+
+
             }
 
         })

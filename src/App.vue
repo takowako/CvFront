@@ -27,7 +27,7 @@ export default {
   data(){
 
     return {
-      hideOn:['home']
+      hideOn:['home','login']
     }
   },
   methods:{
@@ -50,6 +50,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   background:#fbfbfd ;
+}
+
+.hfull{
+
+  min-height: 100vh;
+  height: max-content;
+
 }
 
 

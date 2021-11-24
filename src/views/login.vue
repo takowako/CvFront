@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="hfull">
       <b-row>
           <b-col cols='12' sm='7' >
               <h4>image</h4>
