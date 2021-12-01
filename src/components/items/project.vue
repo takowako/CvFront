@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="observer" v-slot="{ handleSubmit }">
-    <b-form @submit.prevent="handleSubmit(SaveExp)" class="row">
+    <b-form @submit.prevent="handleSubmit(ProjSubmit)" class="row">
         
         <!-- Project name -->
         <b-col cols="12" sm="6">
@@ -15,9 +15,9 @@
                 name="proj-name-input"
                 v-model="ProjForm.ProjNameI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="proj-name-live-feedback"
                 ></b-form-input>
-                <b-form-invalid-feedback id="input-1-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                <b-form-invalid-feedback id="proj-name-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
@@ -36,9 +36,9 @@
                 type='date'
                 v-model="ProjForm.ProjDateI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
-                >
-                </b-form-input>
+                aria-describedby="proj-date-live-feedback"
+                ></b-form-input>
+                <b-form-invalid-feedback id="proj-date-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
@@ -57,38 +57,75 @@
                 name='proj-desc'
                 v-model="ProjForm.ProjDescI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="proj-desc-live-feedback"
                 rows="6"
                 >
                 </b-textarea>
+                <b-form-invalid-feedback id="proj-desc-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
         <!-- End Project Desc -->
+
+        <!-- Project Form Buttons  -->
+        <b-col v-if="type === 'newItem'" class="d-flex justify-content-start" >
+            <b-button type="submit" variant="primary" >Save</b-button>
+            <b-button variant="danger" class="mx-2">Cancel</b-button>
+        </b-col>
 
     </b-form>
   </validation-observer>
 </template>
 
 <script>
+
+import { mapActions } from 'vuex';
+
 export default {
+
+    props:['type','project'],
 
     data(){
 
-        return{
-            ProjForm:{
+        let ProjFormVal;
+
+        if(this.type === 'item'){
+
+            ProjFormVal={
+                ProjNameI:this.project.ProjName,
+                ProjDateI:new Date(this.project.ProjDate).toISOString().substring(0, 10),
+                ProjDescI:this.project.ProjDesc,
+            }
+
+        }
+        else if(this.type === 'newItem'){
+
+            ProjFormVal={
                 ProjNameI:"",
                 ProjDateI:"",
                 ProjDescI:"",
-
             }
+            
+        }
+
+        return{
+            ProjForm:ProjFormVal
         }
     },
     methods:{
         getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
         },
-    }
+        ...mapActions(['SaveProj']),
+        ProjSubmit:function(){
+
+            if(this.type === 'newItem'){
+                this.SaveProj(this.ProjForm)
+            }
+
+        }
+    },
+
 
 
 }

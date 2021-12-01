@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import { ValidationProvider , ValidationObserver , extend,localize } from 'vee-validate';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import VueCookie from 'vue-cookies';
 
 
 
@@ -25,6 +26,7 @@ Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(VueCookie)
 
 
 Vue.config.productionTip = false

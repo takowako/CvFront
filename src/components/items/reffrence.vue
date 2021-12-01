@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="observer" v-slot="{ handleSubmit }">
-    <b-form @submit.prevent="handleSubmit(SaveExp)" class="row">
+    <b-form @submit.prevent="handleSubmit(SaveReffSubmit)" class="row">
         
         <!-- Reffrence name -->
         <b-col cols="12" sm="6">
@@ -13,11 +13,11 @@
                 <b-form-input
                 id="reff-name-input"
                 name="reff-name-input"
-                v-model="RefForm.RefNameI"
+                v-model="ReffForm.RefNameI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="reff-name-live-feedback"
                 ></b-form-input>
-                <b-form-invalid-feedback id="input-1-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                <b-form-invalid-feedback id="reff-name-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
@@ -29,11 +29,11 @@
             name="RefJobI Job"
             :rules="{ required: true, min: 3 }"
             v-slot="validationContext">
-            <b-form-group id="exp-job" label="RefJobI Job" label-for="reff-job-input" >
+            <b-form-group id="exp-job" label="Reffrence Job" label-for="reff-job-input" >
                 <b-form-input
                 id="reff-job-input"
                 name='reff-job-input'
-                v-model="RefForm.RefJobI"
+                v-model="ReffForm.RefJobI"
                 :state="getValidationState(validationContext)"
                 aria-describedby="input-1-live-feedback"
                 >
@@ -55,7 +55,7 @@
                 id="reff-mail-input"
                 name='reff-mail-input'
                 type='email'
-                v-model="RefForm.RefMailI"
+                v-model="ReffForm.RefMailI"
                 :state="getValidationState(validationContext)"
                 aria-describedby="input-1-live-feedback"
                 >
@@ -76,7 +76,7 @@
                 id="reff-phone-input"
                 name='reff-phone-input'
                 type='text'
-                v-model="RefForm.RefPhoneI"
+                v-model="ReffForm.RefPhoneI"
                 :state="getValidationState(validationContext)"
                 aria-describedby="input-1-live-feedback"
                 >
@@ -86,28 +86,61 @@
         </b-col>
         <!-- Reffrence PhoneEnd -->
 
+        <!-- Education Form Buttons  -->
+        <b-col v-if="type === 'newItem'" class="d-flex justify-content-start" >
+            <b-button type="submit" variant="primary" >Save</b-button>
+            <b-button variant="danger" class="mx-2">Cancel</b-button>
+        </b-col>
+
     </b-form>
   </validation-observer>
 </template>
 
 <script>
+
+import {mapActions} from 'vuex';
+
 export default {
 
+    props:['reffrence','type'],
     data(){
 
-        return{
-            RefForm:{
+        let ReffFormVal;
+
+        if(this.type ==='item'){
+
+            ReffFormVal={
+                RefNameI:this.reffrence.RefName,
+                RefJobI:this.reffrence.RefJob,
+                RefMailI:this.reffrence.RefMail,
+                RefPhoneI:this.reffrence.RefPhone
+            }
+        }
+        else if(this.type === 'newItem'){
+      
+            ReffFormVal={
                 RefNameI:"",
                 RefJobI:"",
                 RefMailI:"",
                 RefPhoneI:""
             }
         }
+
+        return {
+           ReffForm:ReffFormVal
+        }
     },
     methods:{
         getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
         },
+        ...mapActions(['SaveReff']),
+        SaveReffSubmit:function(){
+
+            this.SaveReff(this.ReffForm);
+
+            console.log('Reff Saved')
+        }
     }
 
 

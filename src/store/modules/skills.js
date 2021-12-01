@@ -1,0 +1,56 @@
+import axios from "axios"; 
+
+const state = {
+    skills:{}
+}
+
+const getters = {
+    skills:state=>state.skills,
+
+}
+
+const actions = {
+
+    SaveSkill({commit},data){
+
+        var url = process.env.VUE_APP_BASEURL + '/Skill/';
+        axios.post(url,data).then(resp=>{
+
+            if(resp.data.status){
+
+                commit('skills',resp.data.items.list)
+            }
+
+        })
+    },
+    DeleteSkill({commit},skId){
+
+        var url = process.env.VUE_APP_BASEURL + '/skill/'+skId;
+        axios.delete(url).then(resp=>{
+
+            if(resp.data.status){
+
+
+                commit('skills',resp.data.items.list)
+            }
+            
+        })
+
+    }
+    
+
+}
+
+const mutations = {
+
+    skills:(state,skills)=>(state.skills = skills),
+
+}
+
+
+export default {
+    state,
+    getters,
+    actions,
+    mutations
+}

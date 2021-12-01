@@ -16,7 +16,7 @@
 <script>
 import navbar from './components/layout/navbar.vue';
 import sidenav from './components/layout/sidenav.vue';
-
+import VueCookie from 'vue-cookies';
 import { mapActions } from 'vuex';
 
 export default {
@@ -31,12 +31,18 @@ export default {
     }
   },
   methods:{
-    ...mapActions(['LoginByCookie'])
+    ...mapActions(['LoginByCookie','GetCv'])
   },
   mounted(){
 
     //Check Cookie
-    this.LoginByCookie();
+    var User=VueCookie.get('user')
+    var Token=VueCookie.get('token')
+    if(User && Token){
+      this.LoginByCookie({Token,User});
+    }
+
+
 
   }
 }

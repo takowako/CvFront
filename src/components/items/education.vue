@@ -1,6 +1,6 @@
 <template>
     <validation-observer ref="observer" v-slot="{ handleSubmit }">
-    <b-form @submit.prevent="handleSubmit(SaveEdu)" class="row">
+    <b-form @submit.prevent="handleSubmit(SaveEduSubmit)" class="row">
         
         <!-- Edueriance Title -->
         <b-col cols="12" sm="6">
@@ -15,33 +15,33 @@
                 name="edu-title-input"
                 v-model="EduForm.EduTitleI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="edu-title-live-feedback"
                 ></b-form-input>
-                <b-form-invalid-feedback id="input-1-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
+                <b-form-invalid-feedback id="edu-title-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
         <!-- End Education title -->
 
-        <!-- Education Job  -->
+        <!-- Education type  -->
         <b-col cols="12" sm="6">
             <validation-provider
-            name="Education Job"
+            name="Education type"
             :rules="{ required: true, min: 3 }"
             v-slot="validationContext">
-            <b-form-group id="edu-job" label="Education Job" label-for="edu-job-input" >
-                <b-form-input
-                id="edu-job-input"
-                name='edu-job-input'
-                v-model="EduForm.EduJobI"
+            <b-form-group id="edu-type" label="Education type" label-for="edu-type-input" >
+                <b-form-select
+                id="edu-type-input"
+                v-model="EduForm.EduTypeI"
+                :options="EduTypeOptions" 
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
-                >
-                </b-form-input>
+                aria-describedby="edu-type-live-feedback"
+                ></b-form-select>
+                <b-form-invalid-feedback id="edu-type-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
-        <!-- End Education Job -->
+        <!-- End Education type -->
 
 
         <!-- Education Date Start -->
@@ -55,11 +55,12 @@
                 id="edu-date-start-input"
                 name='edu-date-start-input'
                 type='date'
-                v-model="EduForm.EduDateStartI"
+                v-model="EduForm.EduFromI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="edu-date-start-live-feedback"
                 >
                 </b-form-input>
+                <b-form-invalid-feedback id="edu-date-start-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
@@ -76,11 +77,12 @@
                 id="edu-date-end-input"
                 name='edu-date-end-input'
                 type='date'
-                v-model="EduForm.EduDateEndI"
+                v-model="EduForm.EduToI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="edu-date-end-live-feedback"
                 >
                 </b-form-input>
+                <b-form-invalid-feedback id="edu-date-end-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
@@ -99,38 +101,79 @@
                 type='date'
                 v-model="EduForm.EduDescI"
                 :state="getValidationState(validationContext)"
-                aria-describedby="input-1-live-feedback"
+                aria-describedby="edu-desc-live-feedback"
                 rows="6"
                 >
                 </b-textarea>
+                <b-form-invalid-feedback id="edu-desc-live-feedback">{{ validationContext.errors[0] }}</b-form-invalid-feedback>
             </b-form-group>
             </validation-provider>
         </b-col>
         <!-- Education Descriptipn End -->
 
+        <!-- Education Form Buttons  -->
+        <b-col v-if="type === 'newItem'" class="d-flex justify-content-start" >
+            <b-button type="submit" variant="primary" >Save</b-button>
+            <b-button variant="danger" class="mx-2">Cancel</b-button>
+        </b-col>
 
     </b-form>
   </validation-observer>
 </template>
 
 <script>
-export default {
 
+import {mapActions} from 'vuex';
+
+export default {
+    props:['education','type'],
     data(){
 
-        return{
-            EduForm:{
-                EduTitleI:"",
-                EduJobI:"",
+        let EduFormVal;
+
+        if(this.type === 'item'){
+            EduFormVal={
+                EduTitleI:this.education.EduTitle,
+                EduTypeI:this.education.EduType,
+                EduFromI:new Date(this.education.EduFrom).toISOString().substring(0, 10),
+                EduToI:new Date(this.education.EduTo).toISOString().substring(0, 10),
+                EduDescI:this.education.EduDesc
             }
+        }
+        else if(this.type === 'newItem'){
+            EduFormVal={
+                EduTitleI:"",
+                EduTypeI:null,
+                EduFromI:"",
+                EduToI:"",
+                EduDescI:""
+            }
+        }
+
+        return{
+            EduForm:EduFormVal,
+            EduTypeOptions:[
+                {text:"please select",value:null},
+                {text:'Colleage', value:'Colleage'},
+                {text:'Self Learned',value:'Self Learn'}
+            ]
         }
     },
     methods:{
+        ...mapActions(['SaveEdu']),
         getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
         },
-    }
+        SaveEduSubmit:function(){
 
+            this.SaveEdu(this.EduForm)
+            console.log('Education Saved')
+
+        }
+    },
+    mounted(){
+       
+    },
 
 }
 </script>
