@@ -111,6 +111,17 @@
         </b-col>
         <!-- Education Descriptipn End -->
 
+
+        <!-- Education Skills Start -->        
+        <b-col sm="12" class="p-4" >
+         <div class="" v-if="type === 'item'">
+          <skill v-for="(skill,index) in education.EduSkill" v-bind:key="index" v-bind:skill="skill" v-bind:type="'item'" v-bind:itemid="education._id" v-bind:itemtype="'education'" ></skill>
+         </div> 
+         <b-button pill v-b-modal.skill-list-modal @click="updateModal()" class='m-1 p-3 text-center skill-item'  variant="outline-primary" > + Add Skills To Education </b-button>
+        </b-col>
+        <!-- Education Skills End -->
+
+
         <!-- Education Form Buttons  -->
         <b-col v-if="type === 'newItem'" class="d-flex justify-content-start" >
             <b-button type="submit" variant="primary" >Save</b-button>
@@ -124,6 +135,8 @@
 <script>
 
 import {mapActions} from 'vuex';
+import skill from '../../components/items/skill.vue';
+
 
 export default {
     props:['education','type'],
@@ -161,6 +174,9 @@ export default {
     },
     methods:{
         ...mapActions(['SaveEdu']),
+        updateModal(){
+            this.$emit('setModalProp')
+        },
         getValidationState({ dirty, validated, valid = null }) {
         return dirty || validated ? valid : null;
         },
@@ -170,6 +186,9 @@ export default {
             console.log('Education Saved')
 
         }
+    },
+    components:{
+        skill
     },
     mounted(){
        

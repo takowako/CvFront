@@ -1,9 +1,14 @@
 <template>
     <b-row class="h4 align-items-center">
-        <b-badge v-for="(skill , index ) in this.skills" v-bind:key="index" pill class='m-1 p-3 text-center skill-item' :style="'background-color:' +skill.SkillColor">
-            {{skill.SkillTitle}}
-            <button class="del-btn" @click="DelteSkill(skill._id)">D</button>
-        </b-badge>
+
+        <!-- List for Skills in items & Skills list -->
+        <b-row v-if="where != 'form'" >
+            <b-badge v-for="(skill , index ) in this.skills" v-bind:key="index" pill class='m-1 p-3 text-center skill-item' :style="'background-color:' +skill.SkillColor">
+                {{skill.SkillTitle}}
+                <button class="del-btn" @click="DelteSkill(skill._id)">D</button>
+            </b-badge>
+        </b-row>
+
 
         <b-button pill v-b-modal.add-skill-modal v-if="type === 'skill'" class='m-1 p-3 text-center skill-item'  variant="outline-primary" > + Add Skill </b-button>
         <b-modal v-if="type === 'skill'" hide-footer id="add-skill-modal">
@@ -91,7 +96,7 @@ import { mapActions } from 'vuex';
 
 export default {
 
-    props:['skills','type'],
+    props:['skills','type','where'],
     
     data(){
         return {
@@ -112,14 +117,11 @@ export default {
             this.SaveSkill(this.SkillForm)
         },
         DelteSkill(skId){
-
             console.log(skId)
             this.DeleteSkill(skId)
-
         }
-        
-        
-    }
+    },
+
 
 }
 </script>

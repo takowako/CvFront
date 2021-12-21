@@ -146,12 +146,14 @@
                 <b-row class="justify-content-between align-items-start">
                   <h4 class="text-start card-title mb-4 p-1 font-weight-bold">Skills</h4>
                 </b-row>
-                <skillsList v-bind:skills="this.skills" v-bind:type="'skill'"></skillsList>
+                <skill v-for="(skill,index) in this.skills" v-bind:key="index" v-bind:skill="skill" v-bind:type="'list'" ></skill>
+                <b-button pill v-b-modal.add-skill-modal class='m-1 p-3 text-center skill-item'  variant="outline-primary" > + Add Skill </b-button>
             </b-card>
+            <skillModal></skillModal>
 
 
             <!-- Experiance Card Start -->
-            <b-card class="my-3 p-2">
+            <b-card class="my-3 px-2">
                 <b-row class="justify-content-between align-items-start">
                   <h4 class="text-start card-title mb-4 p-1 font-weight-bold">Experiance</h4>
                   <b-button variant="link" class="font-weight-bold h5 text-dark" v-b-toggle.collapse-exp> + Add Experiance</b-button>
@@ -161,12 +163,14 @@
                     <experiance v-bind:type="'newItem'"></experiance>
                  </b-collapse>
                 </b-row>
-                <experiance v-for="(exp,index) in this.experiances" v-bind:key="index" v-bind:experiance="exp" v-bind:type="'item'" ></experiance>
+            </b-card>
+            <b-card class="my-3 p-2" v-for="exp in this.experiances" v-bind:key="exp._id" >
+                <experiance v-bind:experiance="exp" v-bind:type="'item'" @setModalProp="SetSkillModalProp('experiance',exp._id)" ></experiance>
             </b-card>
 
 
             <!-- Education Card Start -->
-            <b-card class="my-3 p-2">
+            <b-card class="my-3 px-2">
              <b-row class="justify-content-between align-items-start">
                 <h4 class="text-start card-title mb-4 p-1 font-weight-bold">Education</h4>
                 <b-button variant="link" class="font-weight-bold h5 text-dark" v-b-toggle.collapse-edu > + Add Education</b-button>
@@ -176,11 +180,14 @@
                   <education v-bind:type="'newItem'"></education>
                  </b-collapse>
              </b-row>
-             <education v-for="(edu,index) in this.educations" v-bind:key="index" v-bind:education="edu" v-bind:type="'item'"></education>
+            </b-card>
+            <b-card class="my-3 p-2" v-for="edu in this.educations" v-bind:key="edu._id" >
+             <education v-bind:education="edu" v-bind:type="'item'" @setModalProp="SetSkillModalProp('education',edu._id)"></education>
             </b-card>
 
+
             <!-- Reffrence Card Start  -->
-            <b-card class="my-3 p-2">
+            <b-card class="my-3 px-2">
              <b-row class="justify-content-between align-items-start">
                 <h4 class="text-start card-title mb-4 p-1 font-weight-bold">Reffrence</h4>
                 <b-button variant="link" class="font-weight-bold h5 text-dark" v-b-toggle.collapse-reff > + Add Reffrence</b-button>
@@ -190,26 +197,29 @@
                   <reffrence v-bind:type="'newItem'" ></reffrence>
                 </b-collapse>
              </b-row>
+            </b-card>
+            <b-card class="my-3 p-2">
              <reffrence  v-for="(reff,index) in this.reffrences" v-bind:key="index" v-bind:reffrence="reff"  v-bind:type="'item'" ></reffrence>
             </b-card>
 
-
             <!-- Projects Card Start -->
-            <b-card class="my-3 p-2">
+            <b-card class="my-3 px-2">
              <b-row class="justify-content-between align-items-start">
                 <h4 class="text-start card-title mb-4 p-1 font-weight-bold">Project</h4>
                 <b-button variant="link" class="font-weight-bold h5 text-dark" v-b-toggle.collapse-proj > + Add Project</b-button>
              </b-row>
              <b-row>
-                 <b-collapse id="collapse-proj" class="mt-2" style="flex:1">
-                     <project v-bind:type="'newItem'" ></project>
-                 </b-collapse>
+                <b-collapse id="collapse-proj" class="mt-2" style="flex:1">
+                    <project v-bind:type="'newItem'" ></project>
+                </b-collapse>
              </b-row>
-             <project v-for="(proj,index) in this.projects" v-bind:key="index" v-bind:project="proj"  v-bind:type="'item'"  ></project>
+            </b-card>
+            <b-card class="my-3 p-2"  v-for="proj in this.projects" v-bind:key="proj._id">
+             <project v-bind:project="proj"  v-bind:type="'item'"  ></project>
             </b-card>
 
         </div>
-
+        <skillListModal  v-bind:itemType="this.SkillModalItemType" v-bind:itemId="this.SkillModalItemId" ></skillListModal>
     </b-container>
   
 </template>
@@ -220,9 +230,11 @@ import experiance from '../components/items/experiance.vue';
 import education from '../components/items/education.vue';
 import reffrence from '../components/items/reffrence.vue';
 import project from '../components/items/project.vue';
-import skillsList from '../components/lists/skillsList.vue';
-
+import skill from '../components/items/skill.vue';
+import skillModal from '../components/widget/skillModal.vue';
+import skillListModal from '../components/widget/skillListModal.vue';
 import { mapGetters } from 'vuex';
+
 
 export default {
 
@@ -231,14 +243,18 @@ export default {
         education,
         reffrence,
         project,
-        skillsList
+        skill,
+        skillModal,
+        skillListModal
     },
     data(){
 
         return {
             socialForm:{
                 mail:''
-            }
+            },
+            SkillModalItemType:'',
+            SkillModalItemId:''
         }
     },
     computed:{
@@ -261,6 +277,10 @@ export default {
         },
         SaveSkill(){
             console.log('Skill Saved')
+        },
+        SetSkillModalProp(type,id){
+            this.SkillModalItemType=type;
+            this.SkillModalItemId=id;
         },
         getValidationState({ dirty, validated, valid = null }) {
          return dirty || validated ? valid : null;

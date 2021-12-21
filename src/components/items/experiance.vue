@@ -1,6 +1,6 @@
 <template>
 
-    
+
     <validation-observer ref="observer" v-slot="{ handleSubmit }">       
      <b-form @submit.prevent="handleSubmit(SaveExpSubmit)" class="row">
         <!-- Experiance Title -->
@@ -109,8 +109,12 @@
         <!-- Experiance Descriptipn End -->
         
         <!-- Experiance Skills Start -->
+        
         <b-col sm="12" class="p-4" >
-         <skillsList v-if="type === 'item'" v-bind:skills="experiance.ExpSkill" v-bind:type="'experiance'"  ></skillsList>
+         <div class="" v-if="type === 'item'">
+          <skill v-for="(skill,index) in experiance.ExpSkill" v-bind:key="index" v-bind:skill="skill" v-bind:type="'item'" v-bind:itemid="experiance._id" v-bind:itemtype="'experiance'" ></skill>
+         </div> 
+         <b-button pill v-b-modal.skill-list-modal @click="updateModal()" class='m-1 p-3 text-center skill-item'  variant="outline-primary" > + Add Skills To Experiance </b-button>
         </b-col>
 
         <!-- Experiance Skills End -->
@@ -127,15 +131,14 @@
 
 <script>
 
-import { mapActions } from 'vuex';
-
-import skillsList from '../lists/skillsList.vue';
+import { mapActions,mapGetters } from 'vuex';
+import skill from '../../components/items/skill.vue';
 
 export default {
 
     props:['experiance','type'],
     components:{
-        skillsList
+        skill
     },
     data(){
         
@@ -159,11 +162,15 @@ export default {
             }
         }
         return{
-            ExpForm:ExpFormVal
+            ExpForm:ExpFormVal,
+            SkillArr:[]
         }
     },
     methods:{
         ...mapActions(['SaveExp']),
+        updateModal(){
+            this.$emit('setModalProp')
+        },
         getValidationState({ dirty, validated, valid = null }) {
           return dirty || validated ? valid : null;
         },
@@ -174,9 +181,11 @@ export default {
 
         }
     },
+    computed:{
+        ...mapGetters(['skills'])
+    },
     mounted(){
     
-
     }
 
 

@@ -62,10 +62,10 @@ router.beforeEach((to, from, next)=>{
   if(to.meta.requireGuest && !_.isEmpty(User) && !_.isEmpty(Token)){
     router.push({ name:'home' });
   }
-
-  if(to.meta.requireAuth && _.isEmpty(User) && _.isEmpty(Token)){
+  else if(to.meta.requireAuth && _.isEmpty(User) && _.isEmpty(Token)){
     router.push({ name:'login' });
   }
+
   next()
 
 });

@@ -36,6 +36,40 @@ const actions = {
             
         })
 
+    },
+    PushSkill({dispatch},obj){
+
+        console.log(obj)
+        if(obj){
+
+            var url = process.env.VUE_APP_BASEURL + '/skill/push';
+            axios.post(url,obj).then((resp)=>{
+
+                if(resp.data.status){
+
+                    //display success message 
+
+                    //update cv
+                    dispatch('GetCv')
+                }
+            })
+
+        }
+    },
+    PullSkill({dispatch},obj){
+        
+        var url = process.env.VUE_APP_BASEURL + '/skill/pull';
+        axios.post(url,obj).then((resp)=>{
+
+            if(resp.data.status){
+
+                //display success message 
+
+                //update cv
+                dispatch('GetCv')
+            }
+        })
+
     }
     
 
