@@ -31,7 +31,7 @@ export default {
   data(){
 
     return {
-      hideOn:['home','login','naron']
+      hideOn:['home','login','naron','sophia']
     }
   },
   methods:{

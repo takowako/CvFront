@@ -5,8 +5,11 @@ import _ from 'lodash';
 import store from '../store/index'
 import Home from '../views/Home.vue'
 import profile from '../views/profile.vue'
-import naron from '../components/templates/naron/naron.vue'
 import login from '../views/login.vue'
+
+import naron from '../components/templates/naron/naron.vue';
+import sophia from '../components/templates/sophia/sophia.vue';
+
 
 Vue.use(VueRouter)
 
@@ -20,6 +23,11 @@ const routes = [
     path:'/naron',
     name:'naron',
     component:naron
+  },
+  {
+    path:'/sophia',
+    name:'sophia',
+    component:sophia
   },
   {
     path:'/profile',
