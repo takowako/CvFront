@@ -1,13 +1,17 @@
 <template>
   <div id="app">
     
-    <div class="d-flex" >
-      <sidenav v-if="!this.hideOn.includes($route.name)" ></sidenav>
-      <div class=" w-100">
-        <navbar v-if='!this.hideOn.includes($route.name)' ></navbar>
+    <div class="d-flex" v-if="!this.hideOn.includes($route.name)" >
+      <sidenav></sidenav>
+      <div class=" w-100" style="background: #f1f1f1;">
+        <navbar></navbar>
         <router-view/>
       </div>
     </div>
+
+  
+    <router-view v-if="this.hideOn.includes($route.name)" />
+    
 
     </div>
 </template>
@@ -27,7 +31,7 @@ export default {
   data(){
 
     return {
-      hideOn:['home','login']
+      hideOn:['home','login','naron']
     }
   },
   methods:{
@@ -55,7 +59,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  background:#fbfbfd ;
+  background:#ffffff ;
 }
 
 .hfull{
