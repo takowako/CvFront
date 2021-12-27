@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <b-container>
 
       <b-row class="py-4" style="border-bottom: 6px black solid">
           <b-col sm="6" >
@@ -106,10 +106,5 @@ export default {
 </script>
 
 <style scoped>
-.h-divider-black{
-    width: 1px;
-    height: auto;
-    background:black;
-   
-}
+
 </style>

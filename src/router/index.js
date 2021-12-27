@@ -9,6 +9,7 @@ import login from '../views/login.vue'
 
 import naron from '../components/templates/naron/naron.vue';
 import sophia from '../components/templates/sophia/sophia.vue';
+import jane from '../components/templates/jane/jane.vue';
 
 
 Vue.use(VueRouter)
@@ -28,6 +29,11 @@ const routes = [
     path:'/sophia',
     name:'sophia',
     component:sophia
+  },
+  {
+    path:'/jane',
+    name:'jane',
+    component:jane
   },
   {
     path:'/profile',
